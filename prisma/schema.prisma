@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+	model User {
+	  id            String   @id @default(uuid())
+	  name          String
+	  phone         String   @unique
+	  email         String?  @unique
+	  password      String?  // For dealer/admin, not for OTP users
+	  role          UserRole @default(CUSTOMER)
+	  language      String   @default("en")
+	  applications  Application[]
+	  notifications Notification[]
+	  createdAt     DateTime @default(now())
+	  updatedAt     DateTime @updatedAt
+	
+	Dealer Dealer[]
+}
+	
+	enum UserRole {
+	  CUSTOMER
+	  DEALER
+	  ADMIN
+	}
+	
+	model Dealer {
+	  id            String   @id @default(uuid())
+	  name          String
+	  phone         String   @unique
+	  email         String?  @unique
+	  location      String
+	  users         User[]   
+	  applications  Application[]
+	  createdAt     DateTime @default(now())
+	}
+	
+	model Product {
+	  id            String   @id @default(uuid())
+	  name          String
+	  description   String
+	  type          ProductType
+	  isActive      Boolean  @default(true)
+	  applications  Application[]
+	  createdAt     DateTime @default(now())
+	}
+	
+	enum ProductType {
+	  LOAN
+	  CREDIT_CARD
+	  INSURANCE
+	  GOLD_LOAN
+	  BNPL
+	}
+	
+	model Application {
+	  id              String   @id @default(uuid())
+	  user            User     @relation(fields: [userId], references: [id])
+	  userId          String
+	  dealer          Dealer?  @relation(fields: [dealerId], references: [id])
+	  dealerId        String?
+	  product         Product  @relation(fields: [productId], references: [id])
+	  productId       String
+	  status          AppStatus @default(RECEIVED)
+	  kycDocs         Json
+	  alternateData   AlternateData?
+	  verificationLog Json
+	  crossSellOffered Boolean @default(false)
+	  notifications   Notification[]
+	  createdAt       DateTime @default(now())
+	  updatedAt       DateTime @updatedAt
+	}
+	
+	enum AppStatus {
+	  RECEIVED
+	  KYC_VERIFIED
+	  BUREAU_CHECK
+	  ALT_DATA_CHECK
+	  APPROVED
+	  REJECTED
+	  IN_PROGRESS
+	  DISBURSED
+	  DELIVERED
+	}
+	
+	model AlternateData {
+	  id            String   @id @default(uuid())
+	  application   Application @relation(fields: [applicationId], references: [id])
+	  applicationId String   @unique
+	  telcoScore    Int?
+	  mandiScore    Int?
+	  dealerRef     String?
+	  createdAt     DateTime @default(now())
+	}
+	
+	model Notification {
+	  id            String   @id @default(uuid())
+	  user          User     @relation(fields: [userId], references: [id])
+	  userId        String
+	  application   Application? @relation(fields: [applicationId], references: [id])
+	  applicationId String?
+	  channel       ChannelType
+	  message       String
+	  sentAt        DateTime @default(now())
+	  language      String   @default("en")
+	  read          Boolean  @default(false)
+	}
+	
+	enum ChannelType {
+	  WEB
+	  SMS
+	  WHATSAPP
+	  EMAIL
+	  DEALER
+	  IVR
+	}
