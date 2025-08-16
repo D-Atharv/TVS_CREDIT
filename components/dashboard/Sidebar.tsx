@@ -139,6 +139,9 @@ export default function Sidebar() {
       icon: <ApplicationsIcon />,
     },
     { name: "Profile", href: "/profile", icon: <ProfileIcon /> },
+    { name: "Raise Ticket", href: "/raise-ticket", icon: <CloseIcon /> },
+    { name: "Performance", href: "/performance", icon: <MenuIcon /> },
+    // { name: "SMS", href: "/sms-tracker", icon: <MenuIcon /> },
   ];
 
   return (

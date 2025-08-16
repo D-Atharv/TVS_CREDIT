@@ -108,6 +108,11 @@ export default function DealerLayout({
       href: "/pending-applications",
       icon: <NewApplicationIcon />,
     },
+    {
+      name: "Dealer Kiosk",
+      href: "/dealer-kiosk",
+      icon: <NewApplicationIcon />,
+    },
   ];
 
   return (

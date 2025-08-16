@@ -1,6 +1,7 @@
 // File: app/(dashboard)/profile/page.tsx
 "use client";
 import React from "react";
+import { CheckCircleIcon, XCircleIcon } from "lucide-react";
 
 // --- Icon Components ---
 const UserCircleIcon = () => (
@@ -53,19 +54,72 @@ const SettingsIcon = () => (
     />
   </svg>
 );
+const ShieldCheckIcon = () => (
+  <svg
+    className="w-8 h-8 text-green-400"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.6-3.75M12 15V2.25"
+    />
+  </svg>
+);
+const BellIcon = () => (
+  <svg
+    className="w-8 h-8 text-yellow-400"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.31 5.632l-1.405 1.405h12.091zM13 14.25A3 3 0 0110 11.25V7.5a3 3 0 016 0v3.75a3 3 0 01-3 3z"
+    />
+  </svg>
+);
+const ChevronRightIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M9 5l7 7-7 7"
+    />
+  </svg>
+);
 
 // --- Modular Bento Box Components ---
 const BentoBox = ({
   children,
   className = "",
+  glow = false,
 }: {
   children: React.ReactNode;
   className?: string;
+  glow?: boolean;
 }) => (
   <div
-    className={`bg-gray-900/70 border border-gray-800 rounded-2xl p-6 backdrop-blur-xl hover:border-blue-700/80 transition-all duration-300 shadow-lg shadow-black/10 ${className}`}
+    className={`relative bg-gradient-to-br from-gray-900/80 to-gray-800/80 border border-gray-700 rounded-2xl p-6 backdrop-blur-xl hover:border-blue-600/60 transition-all duration-300 shadow-lg shadow-black/30 ${className}`}
   >
-    {children}
+    {glow && (
+      <div className="absolute inset-0 overflow-hidden z-0">
+        <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-500/10 rounded-full filter blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-purple-500/10 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
+      </div>
+    )}
+    <div className="relative z-10">{children}</div>
   </div>
 );
 
@@ -79,7 +133,14 @@ const ProfileField = ({ label, value }: { label: string; value: string }) => (
 const ProfileCard = ({ user }: { user: any }) => (
   <BentoBox className="lg:col-span-2">
     <div className="flex items-center space-x-4 mb-6">
-      <UserCircleIcon />
+      <div className="relative">
+        <img
+          className="w-16 h-16 rounded-full border-2 border-blue-500/50 p-1"
+          src={`https://i.pravatar.cc/150`}
+          alt={user.fullName}
+        />
+        <span className="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-400 ring-2 ring-gray-900"></span>
+      </div>
       <div>
         <h2 className="text-2xl font-bold text-white">{user.fullName}</h2>
         <p className="text-sm text-gray-400">{user.email}</p>
@@ -89,6 +150,7 @@ const ProfileCard = ({ user }: { user: any }) => (
       <ProfileField label="Phone Number" value={user.phone} />
       <ProfileField label="Registered Address" value={user.address} />
       <ProfileField label="PAN Number" value={user.pan} />
+      <ProfileField label="Customer Since" value={user.customerSince} />
     </dl>
   </BentoBox>
 );
@@ -100,40 +162,105 @@ const ActionsCard = () => (
       <h2 className="text-xl font-semibold text-white">Account Actions</h2>
     </div>
     <div className="space-y-3">
-      <button className="w-full text-left p-3 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors">
-        Update Contact Details
+      <button className="w-full flex justify-between items-center p-3 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors">
+        <span>Update Contact Details</span>
+        <ChevronRightIcon />
       </button>
-      <button className="w-full text-left p-3 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors">
-        Change Password
+      <button className="w-full flex justify-between items-center p-3 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors">
+        <span>Change Password</span>
+        <ChevronRightIcon />
       </button>
-      <button className="w-full text-left p-3 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors">
-        Close Account
+      <button className="w-full flex justify-between items-center p-3 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors">
+        <span>Close Account</span>
+        <ChevronRightIcon />
       </button>
     </div>
   </BentoBox>
 );
 
-const DocumentsCard = () => (
+const DocumentsCard = () => {
+  // Example: required docs with status (true = uploaded, false = missing)
+  const requiredDocs = [
+    { name: "Aadhaar Card", uploaded: true },
+    { name: "PAN Card", uploaded: true },
+    { name: "Salary Slip (Last 3 months)", uploaded: false },
+    { name: "Bank Statement", uploaded: true },
+    { name: "Address Proof", uploaded: false },
+  ];
+
+  return (
+    <BentoBox className="lg:col-span-2">
+      {/* Header */}
+      <div className="flex items-center space-x-4 mb-4">
+        <DocumentIcon />
+        <h2 className="text-xl font-semibold text-white">My Documents</h2>
+      </div>
+
+      {/* Document checklist */}
+      <div className="space-y-3">
+        {requiredDocs.map((doc, idx) => (
+          <div
+            key={idx}
+            className="flex justify-between items-center p-3 rounded-lg bg-gray-800/50 text-gray-300 text-sm"
+          >
+            <span>{doc.name}</span>
+            {doc.uploaded ? (
+              <CheckCircleIcon className="w-5 h-5 text-green-400" />
+            ) : (
+              <XCircleIcon className="w-5 h-5 text-red-400" />
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Upload button */}
+      <button className="w-full mt-4 py-2 px-4 bg-blue-900/30 hover:bg-blue-900/50 text-blue-300 rounded-lg border border-blue-800 transition-colors duration-200 text-sm">
+        Upload Missing Documents
+      </button>
+    </BentoBox>
+  );
+};
+
+const SecurityCard = () => (
   <BentoBox>
     <div className="flex items-center space-x-4 mb-4">
-      <DocumentIcon />
-      <h2 className="text-xl font-semibold text-white">My Documents</h2>
+      <ShieldCheckIcon />
+      <h2 className="text-xl font-semibold text-white">Security Settings</h2>
+    </div>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <span className="text-sm text-gray-300">Two-Factor Authentication</span>
+        <span className="text-sm font-medium px-3 py-1 rounded-full bg-green-500/10 text-green-400 border border-green-500/20">
+          Enabled
+        </span>
+      </div>
+      <div className="text-sm">
+        <p className="text-gray-400">Last Login:</p>
+        <p className="text-white">16 Aug 2025, 08:30 AM from Bengaluru, IN</p>
+      </div>
+    </div>
+  </BentoBox>
+);
+
+const CommunicationCard = () => (
+  <BentoBox>
+    <div className="flex items-center space-x-4 mb-4">
+      <BellIcon />
+      <h2 className="text-xl font-semibold text-white">Notifications</h2>
     </div>
     <div className="space-y-3">
-      <a
-        href="#"
-        className="flex justify-between items-center p-3 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors"
-      >
-        <span>Loan_Agreement_PL84365.pdf</span>
-        <span className="text-blue-400">Download</span>
-      </a>
-      <a
-        href="#"
-        className="flex justify-between items-center p-3 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors"
-      >
-        <span>KYC_Documents.zip</span>
-        <span className="text-blue-400">Download</span>
-      </a>
+      <div className="flex justify-between items-center text-sm">
+        <span className="text-gray-300">SMS Updates</span>
+        <span className="text-green-400 font-medium">Active</span>
+      </div>
+      <div className="flex justify-between items-center text-sm">
+        <span className="text-gray-300">WhatsApp Alerts</span>
+        <span className="text-green-400 font-medium">Active</span>
+      </div>
+      <div className="flex justify-between items-center text-sm">
+        <span className="text-gray-300">Email Statements</span>
+        <span className="text-green-400 font-medium">Active</span>
+      </div>
     </div>
   </BentoBox>
 );
@@ -145,6 +272,7 @@ export default function ProfilePage() {
     phone: "+91 98765 43210",
     address: "123, MG Road, Koramangala, Bengaluru, Karnataka - 560034",
     pan: "ABCDE****F",
+    customerSince: "15 Aug 2022",
   };
 
   return (
@@ -158,10 +286,18 @@ export default function ProfilePage() {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <ProfileCard user={userProfile} />
-        <ActionsCard />
-        <DocumentsCard />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-2">
+          <ProfileCard user={userProfile} />
+        </div>
+        <div className="lg:col-span-2">
+          <ActionsCard />
+        </div>
+        <div className="lg:col-span-2">
+          <DocumentsCard />
+        </div>
+        <SecurityCard />
+        <CommunicationCard />
       </div>
     </div>
   );
