@@ -1,13 +1,12 @@
 // File: app/(dealer)/customer-lookup/page.tsx
 "use client";
 
-import Link from "next/link";
 import React, { useState } from "react";
 
 // --- Icon Components ---
 const SearchIcon = () => (
   <svg
-    className="w-5 h-5"
+    className="w-5 h-5 text-gray-400"
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"
@@ -35,6 +34,21 @@ const ErrorIcon = () => (
     />
   </svg>
 );
+const UserGroupIcon = () => (
+  <svg
+    className="w-8 h-8 text-blue-400"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m-7.5-2.964A3.375 3.375 0 0112 12.75a3.375 3.375 0 013.75 3.75m-7.5-2.964A3.375 3.375 0 0012 12.75a3.375 3.375 0 003.75 3.75M9.75 11.25A3.375 3.375 0 0113.125 7.5a3.375 3.375 0 013.75 3.75m-7.5-2.964A3.375 3.375 0 006.375 7.5a3.375 3.375 0 00-3.75 3.75m14.25 8.816c.091-.083.18-.168.267-.253A5.035 5.035 0 0018 18.72m-7.5-2.964A5.035 5.035 0 0112 18.72m-3.75-2.964A5.035 5.035 0 006 18.72m12-8.816c-.087.085-.175.17-.267.253m-11.466 0c.091-.085.18-.17.267-.253"
+    />
+  </svg>
+);
 
 // --- Type Definitions ---
 type Status = "Approved" | "In Progress" | "Rejected";
@@ -44,6 +58,34 @@ interface ApplicationResultData {
   type: string;
   status: Status;
 }
+interface ExistingCustomer {
+  id: number;
+  name: string;
+  phone: string;
+  lastProduct: string;
+}
+
+// --- Mock Data ---
+const existingCustomers: ExistingCustomer[] = [
+  {
+    id: 1,
+    name: "Arjun Singh",
+    phone: "9876543211",
+    lastProduct: "Two-Wheeler Loan",
+  },
+  {
+    id: 2,
+    name: "Sunita Devi",
+    phone: "9876543212",
+    lastProduct: "Consumer Durable Loan",
+  },
+  {
+    id: 3,
+    name: "Vikram Kumar",
+    phone: "9876543213",
+    lastProduct: "Tractor Loan",
+  },
+];
 
 // --- Modular Components ---
 
@@ -92,12 +134,12 @@ const ApplicationResult = ({ result }: { result: ApplicationResultData }) => (
       </div>
     </div>
     <div className="mt-6 border-t border-gray-800 pt-4">
-      <Link
-        href={`/applications/${result.id}`}
+      <a
+        href={`/dashboard/applications/${result.id}`}
         className="text-sm font-medium text-blue-400 hover:underline"
       >
         View Full Status Tracker &rarr;
-      </Link>
+      </a>
     </div>
   </BentoBox>
 );
@@ -121,9 +163,7 @@ export default function CustomerLookupPage() {
     setIsLoading(true);
     setError("");
     setSearchResult(null);
-
     await new Promise((resolve) => setTimeout(resolve, 1000));
-
     if (
       searchTerm === "9876543210" ||
       searchTerm.toUpperCase() === "TVS-PL-84365"
@@ -137,7 +177,6 @@ export default function CustomerLookupPage() {
     } else {
       setError("No application found for the given details.");
     }
-
     setIsLoading(false);
   };
 
@@ -145,53 +184,114 @@ export default function CustomerLookupPage() {
     <div className="min-h-screen bg-black text-gray-300 p-4 sm:p-6 lg:p-8 animate-fade-in-up">
       <div className="absolute inset-0 -z-10 h-full w-full bg-black bg-[radial-gradient(#1e1e1e_1px,transparent_1px)] [background-size:32px_32px]"></div>
 
-      <BentoBox className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold text-white">
-          Customer Application Lookup
-        </h1>
-        <p className="mt-2 text-sm text-gray-400">
-          Enter a customer's registered phone number or their application ID to
-          find their status.
-        </p>
-
-        <form
-          onSubmit={handleSearch}
-          className="mt-6 flex flex-col sm:flex-row gap-4"
-        >
-          <div className="flex-grow relative">
-            <label htmlFor="search" className="sr-only">
-              Search Term
-            </label>
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <SearchIcon />
-            </div>
-            <input
-              type="text"
-              name="search"
-              id="search"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="block w-full pl-10 pr-3 py-3 bg-gray-800/80 text-gray-200 placeholder-gray-500 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-300"
-              placeholder="Phone Number or Application ID"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.4)] transform hover:scale-105 disabled:bg-blue-400/50 disabled:cursor-not-allowed"
-            disabled={isLoading}
+      <div className="max-w-4xl mx-auto space-y-8">
+        <BentoBox>
+          <h1 className="text-2xl font-bold text-white">
+            Customer Application Lookup
+          </h1>
+          <p className="mt-2 text-sm text-gray-400">
+            Enter a customer's registered phone number or their application ID
+            to find their status.
+          </p>
+          <form
+            onSubmit={handleSearch}
+            className="mt-6 flex flex-col sm:flex-row gap-4"
           >
-            {isLoading ? "Searching..." : "Search"}
-          </button>
-        </form>
-      </BentoBox>
+            <div className="flex-grow relative">
+              <label htmlFor="search" className="sr-only">
+                Search Term
+              </label>
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <SearchIcon />
+              </div>
+              <input
+                type="text"
+                name="search"
+                id="search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="block w-full pl-10 pr-3 py-3 bg-gray-800/80 text-gray-200 placeholder-gray-500 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-300"
+                placeholder="Phone Number or Application ID"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.4)] transform hover:scale-105 disabled:bg-blue-400/50 disabled:cursor-not-allowed"
+              disabled={isLoading}
+            >
+              {isLoading ? "Searching..." : "Search"}
+            </button>
+          </form>
+        </BentoBox>
 
-      {error && <ErrorMessage message={error} />}
-      {searchResult && (
-        <div className="max-w-3xl mx-auto">
-          <ApplicationResult result={searchResult} />
-        </div>
-      )}
+        {error && <ErrorMessage message={error} />}
+        {searchResult && <ApplicationResult result={searchResult} />}
+
+        <BentoBox>
+          <div className="flex items-center space-x-4 mb-4">
+            <UserGroupIcon />
+            <h2 className="text-xl font-semibold text-white">
+              Existing Customers
+            </h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full">
+              <thead>
+                <tr className="border-b border-gray-800">
+                  <th
+                    scope="col"
+                    className="py-3 pr-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
+                  >
+                    Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
+                  >
+                    Phone
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
+                  >
+                    Last Product
+                  </th>
+                  <th scope="col" className="relative py-3 pl-3">
+                    <span className="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-800">
+                {existingCustomers.map((customer) => (
+                  <tr
+                    key={customer.id}
+                    className="hover:bg-gray-800/50 transition-colors"
+                  >
+                    <td className="py-4 pr-3 text-sm font-medium text-white">
+                      {customer.name}
+                    </td>
+                    <td className="px-3 py-4 text-sm text-gray-400 font-mono">
+                      {customer.phone}
+                    </td>
+                    <td className="px-3 py-4 text-sm text-gray-400">
+                      {customer.lastProduct}
+                    </td>
+                    <td className="py-4 pl-3 text-right text-sm font-medium">
+                      <button
+                        onClick={() => setSearchTerm(customer.phone)}
+                        className="text-blue-400 hover:text-blue-300"
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </BentoBox>
+      </div>
     </div>
   );
 }

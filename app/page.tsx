@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React from "react";
 
-// --- Icon Components for the Bento Grid ---
+// --- Icons ---
 const IconCreditCard = () => (
   <svg
     className="w-8 h-8 text-cyan-400 group-hover:scale-110 transition-transform"
@@ -19,6 +19,7 @@ const IconCreditCard = () => (
     />
   </svg>
 );
+
 const IconTractor = () => (
   <svg
     className="w-8 h-8 text-lime-400 group-hover:scale-110 transition-transform"
@@ -34,6 +35,7 @@ const IconTractor = () => (
     />
   </svg>
 );
+
 const IconMotorbike = () => (
   <svg
     className="w-8 h-8 text-violet-400 group-hover:scale-110 transition-transform"
@@ -49,6 +51,7 @@ const IconMotorbike = () => (
     />
   </svg>
 );
+
 const IconPersonalLoan = () => (
   <svg
     className="w-8 h-8 text-rose-400 group-hover:scale-110 transition-transform"
@@ -64,23 +67,8 @@ const IconPersonalLoan = () => (
     />
   </svg>
 );
-const IconArrowRight = () => (
-  <svg
-    className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M17 8l4 4m0 0l-4 4m4-4H3"
-    />
-  </svg>
-);
 
-// --- Reusable Bento Box Component ---
+// --- Bento Box Wrapper ---
 const BentoBox = ({
   children,
   className = "",
@@ -95,17 +83,13 @@ const BentoBox = ({
   </div>
 );
 
-// --- Main Homepage Component ---
+// --- Homepage ---
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-black bg-[radial-gradient(#1e1e1e_1px,transparent_1px)] [background-size:32px_32px] text-gray-300 font-sans p-4 sm:p-6 lg:p-8 overflow-hidden">
-      {/* Subtle background glow effect */}
-      <div className="absolute top-0 left-0 w-full h-full bg-grid-gray-900/30 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(255,255,255,0.7),rgba(255,255,255,0))]"></div>
-      <div className="absolute inset-0 -z-10 h-full w-full bg-black bg-[radial-gradient(#1e1e1e_1px,transparent_1px)] [background-size:32px_32px]"></div>
-
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <header className="flex justify-between items-center mb-16 animate-fade-in-down">
+        <header className="flex justify-between items-center mb-16">
           <div className="flex items-center space-x-3">
             <svg
               width="32"
@@ -134,28 +118,14 @@ export default function HomePage() {
             </svg>
             <span className="text-xl font-bold text-white">OneView</span>
           </div>
-          <div className="hidden md:flex items-center space-x-2">
-            <Link
-              href="/login"
-              className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-800/80 rounded-lg hover:bg-gray-700/80 transition-colors border border-gray-700"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/register"
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.4)]"
-            >
-              Create Account
-            </Link>
-          </div>
         </header>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-fade-in-up">
-          {/* Main Welcome Box */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {/* Hero Box */}
           <BentoBox className="md:col-span-3 lg:col-span-2 flex flex-col justify-between">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight">
+              <h1 className="text-4xl md:text-5xl font-bold text-white">
                 The Future of Credit, Unified.
               </h1>
               <p className="mt-4 text-lg text-gray-400">
@@ -163,81 +133,141 @@ export default function HomePage() {
                 total transparency. Your journey starts here.
               </p>
             </div>
-            <div className="mt-8 flex flex-col sm:flex-row items-center gap-4">
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Link
-                href="/register"
-                className="w-full sm:w-auto px-6 py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-blue-500 transition-transform transform hover:scale-105 animate-glow"
+                href="/customer/register"
+                className="px-6 py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700"
               >
                 Get Started
               </Link>
               <Link
-                href="/login"
-                className="w-full sm:w-auto px-6 py-3 text-lg font-semibold text-gray-300 rounded-lg hover:bg-gray-800 transition-colors"
+                href="/customer/login"
+                className="px-6 py-3 text-lg font-semibold text-gray-300 rounded-lg hover:bg-gray-800"
               >
                 Sign In
               </Link>
             </div>
           </BentoBox>
 
-          {/* Why OneView Box */}
-          <BentoBox className="md:col-span-1 lg:col-span-2">
+          {/* Customer Login */}
+          <BentoBox>
+            <h2 className="text-xl font-semibold text-white mb-4">
+              Customer Login
+            </h2>
+            <p className="text-gray-400 text-sm mb-4">
+              Access your applications, check loan status, and explore offers.
+            </p>
+            <Link
+              href="/customer/login"
+              className="block w-full px-4 py-2 text-center font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition"
+            >
+              Login as Customer
+            </Link>
+          </BentoBox>
+
+          {/* Dealer Login */}
+          <BentoBox>
+            <h2 className="text-xl font-semibold text-white mb-4">
+              Dealer Login
+            </h2>
+            <p className="text-gray-400 text-sm mb-4">
+              Manage dealer applications, approve requests, and track payouts.
+            </p>
+            <Link
+              href="/dealer/login"
+              className="block w-full px-4 py-2 text-center font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition"
+            >
+              Login as Dealer
+            </Link>
+          </BentoBox>
+
+          {/* Why OneView */}
+          <BentoBox className="md:col-span-2">
             <h2 className="text-xl font-semibold text-white mb-4">
               Why OneView?
             </h2>
             <ul className="space-y-3 text-gray-400">
-              <li className="flex items-center hover:text-white transition-colors">
+              <li className="flex items-center">
                 <span className="text-blue-500 mr-3">✓</span> Live IRCTC-Style
                 Tracking
               </li>
-              <li className="flex items-center hover:text-white transition-colors">
+              <li className="flex items-center">
                 <span className="text-blue-500 mr-3">✓</span> Multi-Channel
                 Access (SMS, App)
               </li>
-              <li className="flex items-center hover:text-white transition-colors">
+              <li className="flex items-center">
                 <span className="text-blue-500 mr-3">✓</span> AI-Powered Fast
                 Approvals
               </li>
-              <li className="flex items-center hover:text-white transition-colors">
+              <li className="flex items-center">
                 <span className="text-blue-500 mr-3">✓</span> Inclusive for
                 Rural & Urban Users
               </li>
             </ul>
           </BentoBox>
 
-          {/* Our Products Box */}
-          <BentoBox className="md:col-span-2 lg:col-span-2">
+          {/* Our Products */}
+          <BentoBox className="md:col-span-2">
             <h2 className="text-xl font-semibold text-white mb-4">
               Our Products
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
-              <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/70 transition-colors group">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex items-center space-x-3 p-2 hover:bg-gray-800 rounded-lg">
                 <IconMotorbike />
-                <span className="text-sm">Two-Wheeler</span>
+                <span>Two-Wheeler</span>
               </div>
-              <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/70 transition-colors group">
+              <div className="flex items-center space-x-3 p-2 hover:bg-gray-800 rounded-lg">
                 <IconTractor />
-                <span className="text-sm">Tractor Loan</span>
+                <span>Tractor Loan</span>
               </div>
-              <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/70 transition-colors group">
+              <div className="flex items-center space-x-3 p-2 hover:bg-gray-800 rounded-lg">
                 <IconCreditCard />
-                <span className="text-sm">Credit Card</span>
+                <span>Credit Card</span>
               </div>
-              <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/70 transition-colors group">
+              <div className="flex items-center space-x-3 p-2 hover:bg-gray-800 rounded-lg">
                 <IconPersonalLoan />
-                <span className="text-sm">Personal Loan</span>
+                <span>Personal Loan</span>
               </div>
             </div>
           </BentoBox>
 
-          {/* Customer Story Box */}
-          <BentoBox className="md:col-span-1 lg:col-span-2">
+          {/* Quick Eligibility Check */}
+          <BentoBox>
+            <h2 className="text-xl font-semibold text-white mb-4">
+              Quick Eligibility Check
+            </h2>
+            <p className="text-gray-400 text-sm mb-4">
+              See if you qualify for our products in just 30 seconds — no impact
+              on your credit score.
+            </p>
+            <Link
+              href="/eligibility-check"
+              className="block w-full px-4 py-2 text-center font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition"
+            >
+              Start Check
+            </Link>
+          </BentoBox>
+
+          {/* Latest Updates */}
+          <BentoBox>
+            <h2 className="text-xl font-semibold text-white mb-4">
+              Latest Updates
+            </h2>
+            <ul className="space-y-2 text-gray-400 text-sm">
+              <li>📢 New Tractor Loan scheme launched</li>
+              <li>📈 Interest rates revised for two-wheeler loans</li>
+              <li>🤖 AI verification process now faster</li>
+            </ul>
+          </BentoBox>
+
+          {/* Customer Story */}
+          <BentoBox className="md:col-span-2">
             <h2 className="text-xl font-semibold text-white mb-3">
               A Farmer's Success
             </h2>
             <blockquote className="text-gray-400 border-l-2 border-lime-500 pl-4 italic">
               "With the tractor loan through OneView, my application was
-              approved in two days. The SMS updates were a blessing. I never
-              felt lost in the process."
+              approved in two days. The SMS updates were a blessing."
             </blockquote>
             <p className="text-right mt-3 font-semibold text-lime-400">
               - Ramesh, Uttar Pradesh
@@ -252,11 +282,11 @@ export default function HomePage() {
             Rights Reserved.
           </p>
           <div className="mt-2 space-x-4">
-            <Link href="#" className="hover:text-gray-400 transition-colors">
+            <Link href="#" className="hover:text-gray-400">
               Privacy Policy
             </Link>
             <span>&middot;</span>
-            <Link href="#" className="hover:text-gray-400 transition-colors">
+            <Link href="#" className="hover:text-gray-400">
               Terms of Service
             </Link>
           </div>

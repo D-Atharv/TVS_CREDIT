@@ -1,10 +1,9 @@
-// // File: app/(dashboard)/applications/page.tsx
+// File: app/(dashboard)/applications/components/modal.tsx
 "use client";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { NewApplicationModal } from "./components/modal";
 
-// --- Icon Components for Summary Cards ---
+// --- Icon Components ---
 const InProgressIcon = () => (
   <svg
     className="w-8 h-8 text-yellow-400"
@@ -47,6 +46,21 @@ const TotalIcon = () => (
       strokeLinejoin="round"
       strokeWidth={2}
       d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V7a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+    />
+  </svg>
+);
+const CloseIcon = () => (
+  <svg
+    className="w-6 h-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M6 18L18 6M6 6l12 12"
     />
   </svg>
 );
@@ -96,12 +110,12 @@ const ApplicationRow = ({ app }: { app: Application }) => (
       <StatusBadge status={app.status} />
     </td>
     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-      <Link
-        href={`/applications/${app.id}`}
+      <a
+        href={`/dashboard/applications/${app.id}`}
         className="text-blue-400 hover:text-blue-300"
       >
         View Details
-      </Link>
+      </a>
     </td>
   </tr>
 );
@@ -126,10 +140,100 @@ const SummaryCard = ({
   </div>
 );
 
+export const NewApplicationModal = ({
+    isOpen,
+    onClose,
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+}) => {
+    if (!isOpen) return null;
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [form, setForm] = useState({ product: "", amount: "" });
+    const router = useRouter(); // ✅ Next.js navigation hook
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        // Simulate API call to create application
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+
+        const fakeId = "TVS-PL-" + Math.floor(10000 + Math.random() * 90000);
+        // Redirect to the new application's status page
+        router.push(`/applications/${fakeId}`);
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in-up">
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl shadow-black/20 w-full max-w-lg m-4 relative">
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors"
+                >
+                    <CloseIcon />
+                </button>
+
+                <h2 className="text-2xl font-bold text-white mb-2">New Application</h2>
+                <p className="text-sm text-gray-400 mb-6">
+                    Enter the details to begin a new loan application.
+                </p>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                        <label
+                            htmlFor="product"
+                            className="block text-sm font-medium text-gray-400 mb-1"
+                        >
+                            Product Type
+                        </label>
+                        <input
+                            id="product"
+                            name="product"
+                            type="text"
+                            value={form.product}
+                            onChange={(e) => setForm({ ...form, product: e.target.value })}
+                            className="block w-full px-4 py-3 bg-gray-800/80 text-gray-200 placeholder-gray-500 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-300"
+                            placeholder="e.g., Personal Loan"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label
+                            htmlFor="amount"
+                            className="block text-sm font-medium text-gray-400 mb-1"
+                        >
+                            Loan Amount (₹)
+                        </label>
+                        <input
+                            id="amount"
+                            name="amount"
+                            type="number"
+                            value={form.amount}
+                            onChange={(e) => setForm({ ...form, amount: e.target.value })}
+                            className="block w-full px-4 py-3 bg-gray-800/80 text-gray-200 placeholder-gray-500 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-300"
+                            placeholder="e.g., 500000"
+                            required
+                        />
+                    </div>
+                    <div className="pt-2 flex justify-end">
+                        <button
+                            type="submit"
+                            className="inline-flex justify-center px-6 py-3 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.4)] transform hover:scale-105 disabled:bg-blue-400/50 disabled:cursor-not-allowed"
+                            disabled={isLoading}
+                        >
+                            {isLoading ? "Submitting..." : "Submit Application"}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
 export default function ApplicationsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const applications: Application[] = [
+  const [applications, _] = useState<Application[]>([
     {
       id: "TVS-PL-84365",
       type: "Personal Loan",
@@ -158,7 +262,7 @@ export default function ApplicationsPage() {
       amount: "₹7,50,000",
       status: "Rejected",
     },
-  ];
+  ]);
 
   return (
     <>
@@ -166,11 +270,9 @@ export default function ApplicationsPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-
       <div className="min-h-screen bg-black text-gray-300 p-4 sm:p-6 lg:p-8 animate-fade-in-up">
-        <div className="absolute inset-0 -z-10 h-full w-full bg-black bg-[radial-gradient(#1e1e1e_1px,transparent_1px)] [background-size:32px_32px]" />
+        <div className="absolute inset-0 -z-10 h-full w-full bg-black bg-[radial-gradient(#1e1e1e_1px,transparent_1px)] [background-size:32px_32px]"></div>
 
-        {/* Header */}
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-white">My Applications</h1>
           <button
@@ -181,7 +283,6 @@ export default function ApplicationsPage() {
           </button>
         </header>
 
-        {/* Bento Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <SummaryCard
             icon={<TotalIcon />}
@@ -204,7 +305,6 @@ export default function ApplicationsPage() {
           />
         </div>
 
-        {/* Applications Table */}
         <div className="mt-8 bg-gray-900/70 border border-gray-800 rounded-2xl backdrop-blur-xl shadow-lg shadow-black/10 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-800">
@@ -257,3 +357,4 @@ export default function ApplicationsPage() {
     </>
   );
 }
+
