@@ -1,6 +1,7 @@
 // File: app/(dealer)/layout.tsx
 "use client";
 
+import { Link } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
 // --- Icon Components ---
@@ -128,12 +129,12 @@ export default function DealerLayout({
                 <p className="text-sm font-medium text-white">{dealer.name}</p>
                 <p className="text-xs text-gray-500">ID: {dealer.dealerId}</p>
               </div>
-              <a
+              <Link
                 href="/"
                 className="p-2 rounded-full text-gray-400 hover:bg-gray-800 hover:text-white transition-colors"
               >
                 <LogoutIcon />
-              </a>
+              </Link>
             </div>
           </div>
         </div>

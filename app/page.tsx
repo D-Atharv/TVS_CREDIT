@@ -263,11 +263,11 @@ export default function HomePage() {
           {/* Customer Story */}
           <BentoBox className="md:col-span-2">
             <h2 className="text-xl font-semibold text-white mb-3">
-              A Farmer's Success
+              A Farmers Success
             </h2>
             <blockquote className="text-gray-400 border-l-2 border-lime-500 pl-4 italic">
-              "With the tractor loan through OneView, my application was
-              approved in two days. The SMS updates were a blessing."
+              With the tractor loan through OneView, my application was
+              approved in two days. The SMS updates were a blessing.
             </blockquote>
             <p className="text-right mt-3 font-semibold text-lime-400">
               - Ramesh, Uttar Pradesh

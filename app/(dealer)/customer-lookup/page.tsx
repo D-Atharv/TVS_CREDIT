@@ -1,4 +1,3 @@
-// File: app/(dealer)/customer-lookup/page.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -58,32 +57,56 @@ interface ApplicationResultData {
   type: string;
   status: Status;
 }
+
+// UPDATED ExistingCustomer interface
 interface ExistingCustomer {
   id: number;
   name: string;
   phone: string;
-  lastProduct: string;
+  lastProductType: string;
+  lastApplicationId: string;
+  lastApplicationDate: string;
+  lastApplicationStatus: Status;
 }
 
 // --- Mock Data ---
+// UPDATED Mock Data with more info
 const existingCustomers: ExistingCustomer[] = [
   {
     id: 1,
     name: "Arjun Singh",
     phone: "9876543211",
-    lastProduct: "Two-Wheeler Loan",
+    lastProductType: "Two-Wheeler Loan",
+    lastApplicationId: "TVS-TWL-19873",
+    lastApplicationDate: "12 Jul 2025",
+    lastApplicationStatus: "Approved",
   },
   {
     id: 2,
     name: "Sunita Devi",
     phone: "9876543212",
-    lastProduct: "Consumer Durable Loan",
+    lastProductType: "Consumer Durable Loan",
+    lastApplicationId: "TVS-CDL-55432",
+    lastApplicationDate: "05 Jun 2025",
+    lastApplicationStatus: "Rejected",
   },
   {
     id: 3,
     name: "Vikram Kumar",
     phone: "9876543213",
-    lastProduct: "Tractor Loan",
+    lastProductType: "Tractor Loan",
+    lastApplicationId: "TVS-TL-33219",
+    lastApplicationDate: "28 May 2025",
+    lastApplicationStatus: "Approved",
+  },
+  {
+    id: 4,
+    name: "Priya Sharma",
+    phone: "9876543210",
+    lastProductType: "Personal Loan",
+    lastApplicationId: "TVS-PL-84365",
+    lastApplicationDate: "15 Aug 2025",
+    lastApplicationStatus: "In Progress",
   },
 ];
 
@@ -135,7 +158,7 @@ const ApplicationResult = ({ result }: { result: ApplicationResultData }) => (
     </div>
     <div className="mt-6 border-t border-gray-800 pt-4">
       <a
-        href={`/dashboard/applications/${result.id}`}
+        href={`/applications/${result.id}`}
         className="text-sm font-medium text-blue-400 hover:underline"
       >
         View Full Status Tracker &rarr;
@@ -163,20 +186,27 @@ export default function CustomerLookupPage() {
     setIsLoading(true);
     setError("");
     setSearchResult(null);
+
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    if (
-      searchTerm === "9876543210" ||
-      searchTerm.toUpperCase() === "TVS-PL-84365"
-    ) {
+
+    // Simulate finding an existing customer from the table or a new one
+    const foundCustomer = existingCustomers.find(
+      (c) =>
+        c.phone === searchTerm ||
+        c.lastApplicationId.toUpperCase() === searchTerm.toUpperCase()
+    );
+
+    if (foundCustomer) {
       setSearchResult({
-        id: "TVS-PL-84365",
-        name: "Priya Sharma",
-        type: "Personal Loan",
-        status: "In Progress",
+        id: foundCustomer.lastApplicationId,
+        name: foundCustomer.name,
+        type: foundCustomer.lastProductType,
+        status: foundCustomer.lastApplicationStatus,
       });
     } else {
       setError("No application found for the given details.");
     }
+
     setIsLoading(false);
   };
 
@@ -184,14 +214,14 @@ export default function CustomerLookupPage() {
     <div className="min-h-screen bg-black text-gray-300 p-4 sm:p-6 lg:p-8 animate-fade-in-up">
       <div className="absolute inset-0 -z-10 h-full w-full bg-black bg-[radial-gradient(#1e1e1e_1px,transparent_1px)] [background-size:32px_32px]"></div>
 
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div className="max-w-6xl mx-auto space-y-8">
         <BentoBox>
           <h1 className="text-2xl font-bold text-white">
             Customer Application Lookup
           </h1>
           <p className="mt-2 text-sm text-gray-400">
-            Enter a customer's registered phone number or their application ID
-            to find their status.
+            Enter a customers registered phone number or their application ID to
+            find their status.
           </p>
           <form
             onSubmit={handleSearch}
@@ -232,7 +262,7 @@ export default function CustomerLookupPage() {
           <div className="flex items-center space-x-4 mb-4">
             <UserGroupIcon />
             <h2 className="text-xl font-semibold text-white">
-              Existing Customers
+              Recent Customer Interactions
             </h2>
           </div>
           <div className="overflow-x-auto">
@@ -249,13 +279,25 @@ export default function CustomerLookupPage() {
                     scope="col"
                     className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
                   >
-                    Phone
+                    Last App ID
                   </th>
                   <th
                     scope="col"
                     className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
                   >
-                    Last Product
+                    Date
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
+                  >
+                    Product Type
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
+                  >
+                    Status
                   </th>
                   <th scope="col" className="relative py-3 pl-3">
                     <span className="sr-only">Actions</span>
@@ -272,17 +314,25 @@ export default function CustomerLookupPage() {
                       {customer.name}
                     </td>
                     <td className="px-3 py-4 text-sm text-gray-400 font-mono">
-                      {customer.phone}
+                      {customer.lastApplicationId}
                     </td>
                     <td className="px-3 py-4 text-sm text-gray-400">
-                      {customer.lastProduct}
+                      {customer.lastApplicationDate}
+                    </td>
+                    <td className="px-3 py-4 text-sm text-gray-400">
+                      {customer.lastProductType}
+                    </td>
+                    <td className="px-3 py-4 text-sm">
+                      <StatusBadge status={customer.lastApplicationStatus} />
                     </td>
                     <td className="py-4 pl-3 text-right text-sm font-medium">
                       <button
-                        onClick={() => setSearchTerm(customer.phone)}
+                        onClick={() =>
+                          setSearchTerm(customer.lastApplicationId)
+                        }
                         className="text-blue-400 hover:text-blue-300"
                       >
-                        View
+                        Lookup
                       </button>
                     </td>
                   </tr>

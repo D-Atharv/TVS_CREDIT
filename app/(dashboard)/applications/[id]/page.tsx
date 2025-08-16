@@ -74,7 +74,6 @@ const TrackerStep = ({
   details,
   estimatedTime,
   documents,
-  isLast = false,
   isInline = false,
 }: Step & { isLast?: boolean; isInline?: boolean }) => {
   const statusStyles = {
@@ -389,8 +388,8 @@ const VerificationGroup = ({ steps }: { steps: Step[] }) => {
               <div className="flex items-start p-3 bg-red-900/20 rounded-lg border border-red-900/30">
                 <AlertCircle className="w-4 h-4 mt-0.5 text-red-400 flex-shrink-0 mr-2" />
                 <p className="text-sm text-red-300">
-                  Some checks couldn't be completed automatically. Our team will
-                  review these manually.
+                  Some checks could not be completed automatically. Our team
+                  will review these manually.
                 </p>
               </div>
             )}
@@ -527,7 +526,8 @@ export default function ApplicationStatusPage({
     purpose: "Agricultural Equipment Purchase",
   });
 
-  const [documents, setDocuments] = useState([
+  // eslint-disable-next-line
+  const [documents, _] = useState([
     {
       title: "Aadhaar Card",
       status: "verified",

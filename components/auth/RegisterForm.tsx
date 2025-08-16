@@ -2,10 +2,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
-// --- Merged RegisterForm Component ---
+  // --- Merged RegisterForm Component ---
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,8 +32,8 @@ export default function RegisterForm() {
       console.log("Registration successful for:", email);
       // On success, redirect to the login page
       window.location.href = "/login";
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+    } catch {
+      setError("An unexpected error occurred.");
       setIsLoading(false);
     }
   };
@@ -110,4 +109,4 @@ export default function RegisterForm() {
       </div>
     </form>
   );
-};
+}

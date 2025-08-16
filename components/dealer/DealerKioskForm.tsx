@@ -81,7 +81,7 @@ export default function DealerKioskForm() {
               Customer & Product Details
             </h3>
             <p className="mt-1 text-sm text-gray-500">
-              Enter the customer's basic information to begin the onboarding
+              Enter the customers basic information to begin the onboarding
               process.
             </p>
           </div>

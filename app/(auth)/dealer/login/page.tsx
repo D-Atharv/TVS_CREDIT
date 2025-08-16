@@ -165,7 +165,7 @@ export default function DealerLoginPage() {
 
       // In a real app, you would verify dealer credentials here
       router.push("/customer-lookup");
-    } catch (err) {
+    } catch {
       setError("Invalid dealer credentials. Please try again.");
     } finally {
       setIsLoading(false);

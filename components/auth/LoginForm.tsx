@@ -44,8 +44,8 @@ export default function LoginForm() {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       console.log("Login successful for:", email);
       window.location.href = "/dashboard";
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+    } catch {
+      setError("An unexpected error occurred.");
       setIsLoading(false);
     }
   };
@@ -130,4 +130,4 @@ export default function LoginForm() {
       </div>
     </div>
   );
-};
+}

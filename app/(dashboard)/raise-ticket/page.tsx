@@ -242,7 +242,7 @@ export default function RaiseTicketPage() {
       const finalTimer = setTimeout(() => setTicketState("resolved"), 1500);
       return () => clearTimeout(finalTimer);
     }
-  }, [ticketState, resolutionStep]);
+  }, [ticketState, resolutionStep,resolutionSteps.length]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -281,7 +281,7 @@ export default function RaiseTicketPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-400 mb-2">
-                    What's the issue about?
+                    Whats the issue about?
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {categories.map((category) => (
@@ -524,7 +524,7 @@ export default function RaiseTicketPage() {
               </h2>
             </div>
             <p className="text-sm text-gray-400 mb-4">
-              For urgent issues that can't wait, contact our 24/7 customer
+              For urgent issues that cant wait, contact our 24/7 customer
               support team.
             </p>
             <div className="space-y-3">

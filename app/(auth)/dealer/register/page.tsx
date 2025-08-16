@@ -183,7 +183,7 @@ export default function DealerRegisterPage() {
 
       // In a real app, you would register the dealer here
       router.push("/dealer/dashboard");
-    } catch (err) {
+    } catch {
       setError("Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
@@ -416,7 +416,7 @@ export default function DealerRegisterPage() {
                   ) : (
                     "Register Dealership"
                   )}
-                  </button>
+                </button>
               </div>
             </form>
 

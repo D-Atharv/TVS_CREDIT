@@ -55,23 +55,6 @@ const ShieldIcon = ({ className = "" }: { className?: string }) => (
     />
   </svg>
 );
-const GoogleIcon = () => (
-  <svg
-    className="w-5 h-5"
-    aria-hidden="true"
-    focusable="false"
-    data-prefix="fab"
-    data-icon="google"
-    role="img"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 488 512"
-  >
-    <path
-      fill="currentColor"
-      d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-76.2 76.2C322.3 121.3 287.4 96 248 96c-88.8 0-160.1 71.1-160.1 160S159.2 416 248 416c94.9 0 145.3-64.5 149.9-98.2H248v-96h239.8c4.7 22.6 7.2 46.5 7.2 71z"
-    ></path>
-  </svg>
-);
 const Logo = () => (
   <svg
     width="48"
@@ -204,7 +187,7 @@ export default function LoginPage() {
           </div>
           <LoginForm />
           <p className="text-sm text-center text-gray-500">
-            Don't have an account?{" "}
+            Dont have an account?{" "}
             <a
               href="/register"
               className="font-semibold text-blue-400 hover:text-blue-300 transition-colors"

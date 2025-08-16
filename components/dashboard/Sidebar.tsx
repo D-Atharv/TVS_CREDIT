@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-// --- Icon Components ---
+// --- Icon Components (unchanged) ---
 const DashboardIcon = () => (
   <svg
     className="h-6 w-6"
@@ -95,6 +95,8 @@ const CloseIcon = () => (
     />
   </svg>
 );
+
+// --- Logo Component (unchanged) ---
 const Logo = () => (
   <div className="flex items-center space-x-3">
     <svg
@@ -126,10 +128,9 @@ const Logo = () => (
   </div>
 );
 
-// --- Sidebar Component (defined within layout for simplicity) ---
+// --- Glassmorphic Sidebar Component ---
 export default function Sidebar() {
-  // This would ideally use `usePathname` from next/navigation to determine the active link
-  const pathname = usePathname(); // ✅ gets the current pathname safely
+  const pathname = usePathname();
 
   const navItems = [
     { name: "Dashboard", href: "/dashboard", icon: <DashboardIcon /> },
@@ -141,42 +142,56 @@ export default function Sidebar() {
     { name: "Profile", href: "/profile", icon: <ProfileIcon /> },
     { name: "Raise Ticket", href: "/raise-ticket", icon: <CloseIcon /> },
     { name: "Performance", href: "/performance", icon: <MenuIcon /> },
-    // { name: "SMS", href: "/sms-tracker", icon: <MenuIcon /> },
+    // { name: "Loan-document", href: "/loan-generation", icon: <MenuIcon /> },
+    { name: "Credit Card", href: "/credit-card", icon: <MenuIcon /> },
   ];
 
   return (
-    <div className="flex flex-col h-full bg-gray-900 border-r border-gray-800">
-      <div className="p-4 border-b border-gray-800 h-16 flex items-center">
+    // The parent element of this sidebar should have a background image or gradient for the effect to work.
+    // Example: <div className="bg-gradient-to-br from-indigo-500 to-purple-600">
+    <aside className="flex flex-col h-full bg-black/30 backdrop-blur-xl border-r border-white/20 shadow-2xl">
+      <div className="p-4 border-b border-white/20 h-20 flex items-center">
         <Logo />
       </div>
-      <nav className="flex-1 px-2 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link
               key={item.name}
               href={item.href}
-              className={`flex items-center px-3 py-2.5 text-sm font-medium rounded-lg group transition-colors duration-200 ${
+              className={`flex items-center px-3 py-3 text-sm font-medium rounded-lg group transition-all duration-200 ${
                 isActive
-                  ? "bg-blue-600/20 text-blue-300"
-                  : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                  ? "bg-white/20 text-white shadow-lg"
+                  : "text-gray-300 hover:bg-white/10 hover:text-white"
               }`}
             >
-              {item.icon}
-              <span className="ml-3">{item.name}</span>
+              <div
+                className={
+                  isActive
+                    ? "text-white"
+                    : "text-gray-400 group-hover:text-white transition-colors"
+                }
+              >
+                {item.icon}
+              </div>
+              <span className="ml-4">{item.name}</span>
             </Link>
           );
         })}
       </nav>
-      <div className="p-4 border-t border-gray-800">
+      <div className="p-4 border-t border-white/20">
         <Link
           href="/"
-          className="flex items-center w-full px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-800 hover:text-white group"
+          className="flex items-center w-full px-3 py-3 text-sm font-medium text-gray-300 rounded-lg hover:bg-white/10 hover:text-white group"
         >
-          <LogoutIcon />
-          <span className="ml-3">Logout</span>
+          <div className="text-gray-400 group-hover:text-white transition-colors">
+            <LogoutIcon />
+          </div>
+          <span className="ml-4">Logout</span>
         </Link>
       </div>
-    </div>
+    </aside>
+    // </div>
   );
 }
